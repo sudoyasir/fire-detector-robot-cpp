@@ -1,13 +1,8 @@
-/*------ Arduino Fire Fighting Robot ver 2.1 (Cleaned & Fixed) ----*/
+/*------ Arduino Fire Fighting Robot ver 2.2 (No GSM) ----*/
 
 #include <Servo.h>
-#include <SoftwareSerial.h>
 
 Servo myservo;
-SoftwareSerial sim800L(2, 3); // RX, TX
-
-// --- Constants ---
-const String PHONE = "+91**********"; // Enter your phone number here
 
 // --- Pin Definitions ---
 #define Left 4
@@ -27,13 +22,6 @@ int pos = 0;
 
 void setup() {
   Serial.begin(115200);
-  sim800L.begin(9600);
-
-  // Initialize GSM
-  sim800L.println("AT");
-  delay(1000);
-  sim800L.println("AT+CMGF=1");
-  delay(1000);
 
   // Sensor & Actuator Setup
   pinMode(Left, INPUT);
@@ -51,11 +39,7 @@ void setup() {
   myservo.attach(13);
   myservo.write(90);
 
-  while (sim800L.available()) {
-    Serial.println(sim800L.readString());
-  }
-
-  Serial.println("🔥 Fire Fighting Robot v2.1 Initialized");
+  Serial.println("🔥 Fire Fighting Robot v2.2 Initialized (No GSM)");
 }
 
 // --- Main Loop ---
@@ -96,17 +80,15 @@ void robotMovement() {
 
   delay(300);
 
-  // Check Gas
+  // Check Gas (only print, no GSM)
   if (digitalRead(GAS_SENSOR) == 0) {
     Serial.println("⚠️ Gas Detected!");
-    send_sms();
   }
 
   // Fire handling
   while (fire == true) {
     put_off_fire();
     Serial.println("🔥 Fire Handling Activated!");
-    make_call();
   }
 }
 
@@ -161,25 +143,4 @@ void put_off_fire() {
   myservo.write(90);
   fire = false;
   Serial.println("💧 Fire Extinguished!");
-}
-
-// --- GSM Communication ---
-void make_call() {
-  Serial.println("📞 Calling owner...");
-  sim800L.println("ATD" + PHONE + ";");
-  delay(15000);
-  sim800L.println("ATH");
-  delay(1000);
-}
-
-void send_sms() {
-  Serial.println("📩 Sending SMS alert...");
-  sim800L.print("AT+CMGF=1\r");
-  delay(1000);
-  sim800L.print("AT+CMGS=\"" + PHONE + "\"\r");
-  delay(1000);
-  sim800L.print("Gas Detected in area!");
-  delay(100);
-  sim800L.write(0x1A);
-  delay(3000);
 }
