@@ -1,9 +1,5 @@
 /*------ Arduino Fire Fighting Robot ver 2.2 (No GSM) ----*/
 
-#include <Servo.h>
-
-Servo myservo;
-
 // --- Pin Definitions ---
 #define Left 4
 #define Right 5
@@ -13,12 +9,10 @@ Servo myservo;
 #define LM2 9
 #define RM1 10
 #define RM2 11
-#define pump 12
 #define fireSensor A1
 #define buzzer A0
 
 boolean fire = false;
-int pos = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -34,10 +28,6 @@ void setup() {
   pinMode(LM2, OUTPUT);
   pinMode(RM1, OUTPUT);
   pinMode(RM2, OUTPUT);
-  pinMode(pump, OUTPUT);
-
-  myservo.attach(13);
-  myservo.write(90);
 
   Serial.println("🔥 Fire Fighting Robot v2.2 Initialized (No GSM)");
 }
@@ -62,8 +52,6 @@ void checkFireBuzzer() {
 
 // --- Robot Movement and Actions ---
 void robotMovement() {
-  myservo.write(90);
-
   if (digitalRead(Left) == 1 && digitalRead(Right) == 1 && digitalRead(Forward) == 1) {
     moveForward();
   } 
@@ -85,10 +73,10 @@ void robotMovement() {
     Serial.println("⚠️ Gas Detected!");
   }
 
-  // Fire handling
-  while (fire == true) {
-    put_off_fire();
-    Serial.println("🔥 Fire Handling Activated!");
+  // Fire detected - just log it, no extinguishing
+  if (fire == true) {
+    Serial.println("🔥 Fire Detected - Robot Stopped!");
+    fire = false; // Reset fire flag to continue movement
   }
 }
 
@@ -123,24 +111,4 @@ void turnRight() {
   digitalWrite(RM1, LOW);
   digitalWrite(RM2, LOW);
   Serial.println("↪️ Turning Right");
-}
-
-// --- Extinguishing Fire ---
-void put_off_fire() {
-  digitalWrite(pump, HIGH);
-  delay(500);
-
-  for (pos = 50; pos <= 110; pos += 1) {
-    myservo.write(pos);
-    delay(10);
-  }
-  for (pos = 110; pos >= 50; pos -= 1) {
-    myservo.write(pos);
-    delay(10);
-  }
-
-  digitalWrite(pump, LOW);
-  myservo.write(90);
-  fire = false;
-  Serial.println("💧 Fire Extinguished!");
 }

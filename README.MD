@@ -1,7 +1,7 @@
-# 🔥 Fire Fighting Robot v2.2
+# 🔥 Fire Detection Robot v2.2
 
-A simple Arduino-based **Fire Fighting Robot** that can automatically detect fire, extinguish it using a water pump, and detect gas leaks.
-This version **does not use GSM**, making it easy for beginners to build with only basic components.
+A simple Arduino-based **Fire Detection Robot** that can automatically detect fire and navigate autonomously while alerting through a buzzer.
+This version **does not use GSM** and focuses purely on fire detection and navigation, making it easy for beginners to build with basic components.
 
 ---
 
@@ -9,7 +9,6 @@ This version **does not use GSM**, making it easy for beginners to build with on
 
 * 🚗 Autonomous movement using IR sensors (Forward, Left, Right).
 * 🔥 Fire detection using flame sensor.
-* 💧 Fire extinguishing using water pump + servo (sweeping motion).
 * ⚠️ Gas detection with MQ-series gas sensor.
 * 🔊 Buzzer alerts when fire is detected.
 * 📟 Serial Monitor logging for debugging.
@@ -23,8 +22,6 @@ This version **does not use GSM**, making it easy for beginners to build with on
 | Arduino UNO / Nano                        | 1                                 | Main controller           |
 | L293D Motor Driver or Motor Driver Module | 1                                 | To control motors         |
 | DC Motors + Wheels                        | 2–4                               | For movement              |
-| Servo Motor (SG90/MG90)                   | 1                                 | For nozzle sweeping       |
-| Water Pump + Relay/Transistor Driver      | 1                                 | Pump to spray water       |
 | Flame Sensor (IR flame detector)          | 1                                 | Detects fire              |
 | Gas Sensor (MQ-2 / MQ-5 / MQ-7)           | 1                                 | Detects gas leakage       |
 | IR Line/Obstacle Sensors                  | 3                                 | Forward, Left, Right      |
@@ -47,8 +44,6 @@ This version **does not use GSM**, making it easy for beginners to build with on
 | `9`  | Left Motor IN2    |
 | `10` | Right Motor IN1   |
 | `11` | Right Motor IN2   |
-| `12` | Water Pump        |
-| `13` | Servo Motor       |
 | `A0` | Buzzer            |
 | `A1` | Fire Sensor       |
 
@@ -64,15 +59,14 @@ This version **does not use GSM**, making it easy for beginners to build with on
 2. **Movement Control**
 
    * IR sensors help the robot avoid obstacles and move forward.
-   * If an obstacle is in front, the robot stops and checks for fire.
+   * If an obstacle is in front, the robot stops and logs fire detection.
    * If left or right sensors detect a path, the robot turns accordingly.
 
-3. **Fire Extinguishing**
+3. **Fire Alert System**
 
-   * When fire is detected ahead, the robot stops.
-   * The pump turns ON and sprays water.
-   * The servo sweeps the nozzle left ↔ right to spread water.
-   * Fire is declared extinguished and the robot resumes normal operation.
+   * When fire is detected ahead, the robot stops and alerts via buzzer.
+   * Fire detection is logged to Serial Monitor.
+   * Robot resumes normal operation after detection.
 
 4. **Gas Detection**
 
@@ -98,7 +92,7 @@ This version **does not use GSM**, making it easy for beginners to build with on
 4. The robot will:
 
    * Move forward by default.
-   * Stop and extinguish if fire is detected.
+   * Stop and alert if fire is detected.
    * Sound buzzer on fire detection.
    * Print "Gas Detected!" if gas sensor triggers.
 
@@ -109,6 +103,5 @@ This version **does not use GSM**, making it easy for beginners to build with on
 * 🔲 Chassis with DC motors and motor driver.
 * 🔥 Flame sensor in front.
 * ⚠️ Gas sensor mounted on top/front.
-* 💧 Pump + servo-mounted nozzle at the front.
-* 🔊 Buzzer on chassis.
+*  Buzzer on chassis.
 * 🔋 Battery securely mounted.
